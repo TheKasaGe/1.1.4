@@ -3,6 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -39,23 +40,24 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-//        try (PreparedStatement statement = Util.getConnection().prepareStatement("INSERT INTO users (name, lastName, age) VALUES (?,?,?);")) {
-//            statement.setString(1, name);
-//            statement.setString(2, lastName);
-//            statement.setByte(3, age);
-//            System.out.println("User с именем – " + name + " добавлен в базу данных");
-//        } catch (SQLException e) {
-//            System.out.println("User с именем – " + name + " НЕ добавлен в базу данных!!!");
-//            e.printStackTrace();
-//        }
-        try (Statement statement = Util.getConnection().createStatement()) {
-            String SQL = "INSERT INTO users (name, lastName, age) " +
-                    "VALUES ('" + name + "', '" + lastName + "', '" + age + "');";
-            statement.execute(SQL);
+        try (PreparedStatement statement = Util.getConnection().prepareStatement("INSERT INTO users (name, lastName, age) VALUES (?,?,?);")) {
+            statement.setString(1, name);
+            statement.setString(2, lastName);
+            statement.setByte(3, age);
+            statement.executeUpdate();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (SQLException e) {
             System.out.println("User с именем – " + name + " НЕ добавлен в базу данных!!!");
+            e.printStackTrace();
         }
+//        try (Statement statement = Util.getConnection().createStatement()) {
+//            String SQL = "INSERT INTO users (name, lastName, age) " +
+//                    "VALUES ('" + name + "', '" + lastName + "', '" + age + "');";
+//            statement.execute(SQL);
+//            System.out.println("User с именем – " + name + " добавлен в базу данных");
+//        } catch (SQLException e) {
+//            System.out.println("User с именем – " + name + " НЕ добавлен в базу данных!!!");
+//        }
     }
 
     public void removeUserById(long id) {
